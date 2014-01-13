@@ -15,8 +15,13 @@ fn main() {
 
   let mut buffer = [0u8, ..512];
 
-  match stream.read(buffer) {
-    Some(_) => println(std::str::from_utf8(buffer)),
-    None => fail!("cannot read from server!")
+  loop {
+    match stream.read(buffer) {
+      Some(_) => print(std::str::from_utf8(buffer)),
+      None => {
+        println("server terminated the connection!");
+        return;
+      }
+    }
   }
 }
