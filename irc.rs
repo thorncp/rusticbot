@@ -17,7 +17,13 @@ fn main() {
 
   loop {
     match stream.read(buffer) {
-      Some(_) => print(std::str::from_utf8(buffer)),
+      Some(_) => {
+        match std::str::from_utf8_opt(buffer) {
+          // TODO i'm seeing occasional race conditions with printing lines
+          Some(line) => print(line),
+          None => println("not utf8!")
+        }
+      },
       None => {
         println("server terminated the connection!");
         return;
